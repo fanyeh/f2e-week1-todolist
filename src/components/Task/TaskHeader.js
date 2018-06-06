@@ -120,11 +120,12 @@ class TaskHeader extends Component {
                   checked={complete}
                   placeholder="Type Something here..."
                   innerRef={value.titleRef}
+                  value={this.props.item ? this.props.item.title : ''}
                 />
               )}
             </TaskContext.Consumer>
           ) : (
-            <StyledLabel checked={complete}>Type Something here...</StyledLabel>
+            <StyledLabel checked={complete}>{this.props.item.title}</StyledLabel>
           )}
 
           <ImportantIcon

@@ -8,13 +8,30 @@ const createItemID = () => {
   return Date.now();
 };
 
-const addTodoItem = newItem => {
+const addItem = newItem => {
   let currentItems = getCurrentItems();
   const itemID = createItemID();
-  currentItems[itemID] = newItem;
-  localStorage.setItem(todoItemsKey, JSON.stringify(currentItems));
+
+  currentItems[itemID] = { id: itemID, ...newItem };
+  setItems(currentItems);
+};
+
+const updateItem = item => {
+  let currentItems = getCurrentItems();
+  currentItems[item.id] = item;
+  setItems(currentItems);
+};
+
+const setItems = items => {
+  localStorage.setItem(todoItemsKey, JSON.stringify(items));
+};
+
+const listItems = () => {
+  return Object.values(getCurrentItems());
 };
 
 export default {
-  addTodoItem,
+  addItem,
+  updateItem,
+  listItems,
 };

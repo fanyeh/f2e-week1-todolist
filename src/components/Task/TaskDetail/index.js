@@ -40,8 +40,13 @@ const StyledButton = styled.button`
 `;
 
 class TaskDetail extends Component {
-  addHandler = () => {
-    this.props.addHandler({});
+  clickHandler = () => {
+    const { updateHandler, addHandler, isUpdate } = this.props;
+    if (isUpdate) {
+      updateHandler();
+    } else {
+      addHandler();
+    }
   };
   render() {
     return (
@@ -50,11 +55,11 @@ class TaskDetail extends Component {
         <TaskItemFile />
         <TaskItemComment />
         <ButtonGroup>
-          <StyledButton>
+          <StyledButton onClick={this.props.cancelHandler}>
             <span>x</span> Cancel
           </StyledButton>
-          <StyledButton add onClick={this.addHandler}>
-            <span>+</span> Add Task
+          <StyledButton add onClick={this.clickHandler}>
+            <span>+</span> {this.props.isUpdate ? 'Save' : 'Add Task'}
           </StyledButton>
         </ButtonGroup>
       </Wrapper>
