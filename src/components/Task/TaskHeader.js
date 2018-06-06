@@ -26,18 +26,22 @@ const TitleStyle = css`
   font-size: ${fontSize.large};
   flex-grow: 1;
   text-align: left;
-  color: ${props => (props.checked ? color.darkGray : color.black)};
 `;
 
 const StyledTextfield = styled.input`
   border: none;
   background: none;
   outline: none;
+/* color: ${props => (props.checked ? color.darkGray : color.black)}; */
+&::placeholder {
+  color: ${color.darkGray}
+}
   ${TitleStyle};
 `;
 
 const StyledLabel = styled.label`
   text-decoration: ${props => (props.checked ? 'line-through' : '')};
+  color: ${props => (props.checked ? color.darkGray : color.black)};
   ${TitleStyle};
 `;
 
@@ -101,37 +105,63 @@ const Status = styled.div`
 `;
 
 class TaskHeader extends Component {
+  state = {
+    title: this.props.item ? this.props.item.title : '',
+    important: this.props.item ? this.props.item.important : false,
+    complete: this.props.item ? this.props.item.complete : false,
+  };
+
+  changeHandler = e => {
+    this.setState({ title: e.target.value });
+  };
+
+  importantClickHandler = () => {
+    this.setState(
+      ({ important }) => ({ important: !important }),
+      () => this.props.importantHandler(this.state.important),
+    );
+  };
+  completeClickHandler = () => {
+    this.setState(
+      ({ complete }) => ({ complete: !complete }),
+      () => this.props.completeHandler(this.state.complete),
+    );
+  };
+
   render() {
-    const { completeHandler, importantHandler, toggleEdit, important, complete, edit } = this.props;
+    const { toggleEdit, edit, item } = this.props;
+    const { title, important, complete } = this.state;
+    const checkboxID = item ? item.id : 'complete-new';
     return (
       <Wrapper important={important} complete={complete}>
         <Header>
           <StyledCheckbox
             type="checkbox"
             checked={complete}
-            onChange={completeHandler}
-            id="complete"
+            onChange={this.completeClickHandler}
+            id={checkboxID}
           />
-          <StyledCheckmark htmlFor="complete" />
+          <StyledCheckmark htmlFor={checkboxID} />
           {edit ? (
             <TaskContext.Consumer>
               {value => (
                 <StyledTextfield
-                  checked={complete}
-                  placeholder="Type Something here..."
+                  placeholder={this.props.item ? '' : 'Type Something here...'}
                   innerRef={value.titleRef}
-                  value={this.props.item ? this.props.item.title : ''}
+                  value={this.state.title}
+                  type="text"
+                  onChange={this.changeHandler}
                 />
               )}
             </TaskContext.Consumer>
           ) : (
-            <StyledLabel checked={complete}>{this.props.item.title}</StyledLabel>
+            <StyledLabel checked={complete}>{title}</StyledLabel>
           )}
 
           <ImportantIcon
             className={classNames('fa-star', important ? 'fas' : 'far')}
             important={important}
-            onClick={importantHandler}
+            onClick={this.importantClickHandler}
           />
           <EditIcon className="fas fa-pencil-alt" edit={edit} onClick={toggleEdit} />
         </Header>

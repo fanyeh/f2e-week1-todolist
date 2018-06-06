@@ -10,12 +10,8 @@ const Wrapper = styled.div`
 `;
 
 class Task extends Component {
-  static defaultProps = { important: false, complete: false, edit: false };
-
   state = {
-    important: this.props.item ? this.props.item.important : this.props.important,
-    complete: this.props.item ? this.props.item.complete : this.props.complete,
-    edit: this.props.edit,
+    edit: this.props.item ? false : true,
   };
 
   elementRefs = {
@@ -29,17 +25,26 @@ class Task extends Component {
    * Handlers
    */
 
-  completeHandler = () => {
-    this.setState(({ complete }) => ({ complete: !complete }), this.updateComplete);
+  completeHandler = value => {
+    if (this.props.item) {
+      this.updateItem({ complete: value });
+    } else {
+      this.complete = value;
+    }
   };
-  importantHandler = () => {
-    this.setState(({ important }) => ({ important: !important }), this.updateImportant);
+  importantHandler = value => {
+    if (this.props.item) {
+      this.updateItem({ important: value });
+    } else {
+      this.important = value;
+    }
   };
 
   addHandler = () => {
-    this.toggleEdit();
     const newItem = this.createItem();
     DataCenter.addItem(newItem);
+    this.props.cancelHandler();
+    this.props.refreshHandler();
   };
 
   updateHandler = () => {
@@ -62,17 +67,9 @@ class Task extends Component {
       date: dateRef.current.value,
       time: timeRef.current.value,
       comment: commentRef.current.value,
-      important: this.state.important,
-      complete: this.state.complete,
+      important: this.important,
+      complete: this.complete,
     };
-  };
-
-  updateComplete = () => {
-    this.updateItem({ complete: this.state.complete });
-  };
-
-  updateImportant = () => {
-    this.updateItem({ important: this.state.important });
   };
 
   updateItem = item => {
@@ -90,7 +87,7 @@ class Task extends Component {
       item: this.props.item ? this.props.item : null,
       completeHandler: this.completeHandler,
       importantHandler: this.importantHandler,
-      toggleEdit: this.props.new ? () => {} : this.toggleEdit,
+      toggleEdit: this.props.item ? this.toggleEdit : () => {},
     };
   };
 
@@ -109,7 +106,6 @@ class Task extends Component {
       <Wrapper>
         <TaskProvider value={this.elementRefs}>
           <TaskHeader {...this.headerProps()} />
-
           {this.state.edit && <TaskDetail {...this.detailProps()} />}
         </TaskProvider>
       </Wrapper>

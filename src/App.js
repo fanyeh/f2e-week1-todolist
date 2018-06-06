@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import { color } from './components/DesignConfig';
+import styled from 'styled-components';
 import NavBar from './components/NavBar';
 import TaskAdder from './components/TaskAdder';
 import Task from './components/Task';
-import './App.css';
 import DataCenter from './components/DataCenter';
+import './App.css';
 
 const AppWrapper = styled.div`
   /* height: 100vh; */
@@ -17,31 +17,21 @@ const StyledHeader = styled.header`
   background-color: ${color.blue};
 `;
 
-const Wrapper = styled.div`
-  margin: 1.5rem auto;
-`;
-
 class App extends Component {
-  state = { showNewTask: false };
-  clickHandler = () => {
-    this.setState(({ showNewTask }) => ({ showNewTask: !showNewTask }));
+  state = { items: DataCenter.listItems() };
+
+  refreshHandler = item => {
+    this.setState({ items: DataCenter.listItems() });
   };
+
   render() {
     return (
       <AppWrapper>
         <StyledHeader>
           <NavBar />
         </StyledHeader>
-
-        <Wrapper>
-          {this.state.showNewTask ? (
-            <Task edit={true} cancelHandler={this.clickHandler} />
-          ) : (
-            <TaskAdder clickHandler={this.clickHandler} />
-          )}
-        </Wrapper>
-
-        {DataCenter.listItems().map(item => <Task item={item} key={item.id} />)}
+        <TaskAdder clickHandler={this.clickHandler} refreshHandler={this.refreshHandler} />
+        {this.state.items.map(item => <Task item={item} key={item.id} />)}
       </AppWrapper>
     );
   }

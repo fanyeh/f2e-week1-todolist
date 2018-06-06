@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import Task from './Task';
 import { color, fontSize, fontWeight } from './DesignConfig';
 
-const StyledButton = styled.button`
+const AddButton = styled.button`
   width: 38.75rem;
   height: 4.06rem;
   background-color: ${color.white};
@@ -16,9 +17,29 @@ const StyledButton = styled.button`
   color: ${color.gray};
 `;
 
+const Wrapper = styled.div`
+  margin: 1.5rem auto;
+`;
+
 class TaskAdder extends Component {
+  state = { showNewTask: false };
+  clickHandler = () => {
+    this.setState(({ showNewTask }) => ({ showNewTask: !showNewTask }));
+  };
   render() {
-    return <StyledButton onClick={this.props.clickHandler}>+ Add Task</StyledButton>;
+    return (
+      <Wrapper>
+        {this.state.showNewTask ? (
+          <Task
+            edit={true}
+            cancelHandler={this.clickHandler}
+            refreshHandler={this.props.refreshHandler}
+          />
+        ) : (
+          <AddButton onClick={this.clickHandler}>+ Add Task</AddButton>
+        )}
+      </Wrapper>
+    );
   }
 }
 
