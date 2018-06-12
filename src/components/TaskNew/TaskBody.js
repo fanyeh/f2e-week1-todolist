@@ -69,16 +69,25 @@ const ItemWrapper = styled.div`
   display: flex;
 `;
 
-const FileButton = styled.button`
+const FileButton = styled.label`
   background-color: ${color.gray};
-  width: 2rem;
-  height: 2rem;
+  padding: 0 0.5rem;
+  /* height: 2rem; */
   margin-top: 0.5rem;
   margin-left: 1.5rem;
   border: none;
   border-radius: 2px;
   color: white;
   font-size: ${fontSize.large};
+  cursor: pointer;
+`;
+
+const FileInput = styled.input`
+  display: none;
+`;
+
+const FileName = styled.label`
+  margin-left: 1.5rem;
 `;
 
 const StyledTextarea = styled.textarea`
@@ -119,6 +128,10 @@ const ItemHeader = ({ name, icon }) => {
 };
 
 class TaskBody extends Component {
+  state = { fileName: '' };
+  changeHandler = e => {
+    this.setState({ fileName: e.target.value });
+  };
   render() {
     const { cancelHandler, clickHandler, refs, date, setDeadline } = this.props;
     return (
@@ -133,7 +146,14 @@ class TaskBody extends Component {
 
         <ItemContainer>
           <ItemHeader name="file" icon="fa-file" />
-          <FileButton>+</FileButton>
+          <label>{this.state.fileName.split(/.*[\/|\\]/)[1]}</label>
+          <FileButton htmlFor="file1">+</FileButton>
+          <FileInput
+            type="file"
+            id="file1"
+            value={this.state.fileName}
+            onChange={this.changeHandler}
+          />
         </ItemContainer>
 
         <ItemContainer>
