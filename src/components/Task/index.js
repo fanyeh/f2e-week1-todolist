@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import TaskHeader from './TaskHeader';
-import TaskDetail from './TaskDetail';
-import DataCenter from '../DataCenter';
-import TaskProvider from './TaskContext';
+import TaskBody from './TaskBody';
+import VisibleTaskHeader from '../../containers/VisibleTaskHeader';
+
 const Wrapper = styled.div`
-  width: 38.75rem;
-  margin: 0 auto 0.5rem auto;
+  margin-bottom: 0.5rem;
 `;
 
 class Task extends Component {
@@ -14,67 +12,57 @@ class Task extends Component {
     edit: this.props.item ? false : true,
   };
 
-  elementRefs = {
-    titleRef: React.createRef(),
-    dateRef: React.createRef(),
-    timeRef: React.createRef(),
-    commentRef: React.createRef(),
-  };
+  titleRef = React.createRef();
+  dateRef = React.createRef();
+  timeRef = React.createRef();
+  commentRef = React.createRef();
 
   /**
    * Handlers
    */
 
-  completeHandler = value => {
-    if (this.props.item) {
-      this.updateItem({ complete: value });
-    } else {
-      this.complete = value;
-    }
-  };
-  importantHandler = value => {
-    if (this.props.item) {
-      this.updateItem({ important: value });
-    } else {
-      this.important = value;
-    }
-  };
-
-  addHandler = () => {
-    const newItem = this.createItem();
-    DataCenter.addItem(newItem);
-    this.props.cancelHandler();
-    this.props.refreshHandler();
-  };
-
   updateHandler = () => {
-    this.updateItem(this.createItem());
+    const updatedItem = Object.assign(this.props.item, this.createItem());
+    this.props.updateTodo(updatedItem);
     this.toggleEdit();
   };
 
   toggleEdit = () => {
-    this.setState(({ edit }) => ({ edit: !edit }));
+    this.setState(
+      ({ edit }) => ({ edit: !edit }),
+      () => {
+        if (this.state.edit) {
+          this.titleRef.current.focus();
+        }
+      },
+    );
   };
+
+  /**
+   * Lifecycles
+   */
+
+  componentDidMount() {
+    if (this.state.edit) {
+      this.titleRef.current.focus();
+    }
+  }
 
   /**
    * Utils
    */
 
   createItem = () => {
-    const { commentRef, timeRef, dateRef, titleRef } = this.elementRefs;
     return {
-      title: titleRef.current.value,
-      date: dateRef.current.value,
-      time: timeRef.current.value,
-      comment: commentRef.current.value,
-      important: this.important,
-      complete: this.complete,
+      title: this.getRefValue(this.titleRef),
+      date: this.getRefValue(this.dateRef),
+      time: this.getRefValue(this.timeRef),
+      comment: this.getRefValue(this.commentRef),
     };
   };
 
-  updateItem = item => {
-    const updatedItem = Object.assign(this.props.item, item);
-    DataCenter.updateItem(updatedItem);
+  getRefValue = ref => {
+    return ref.current.value;
   };
 
   /**
@@ -84,30 +72,30 @@ class Task extends Component {
   headerProps = () => {
     return {
       ...this.state,
-      item: this.props.item ? this.props.item : null,
-      completeHandler: this.completeHandler,
-      importantHandler: this.importantHandler,
-      toggleEdit: this.props.item ? this.toggleEdit : () => {},
+      item: this.props.item,
+      toggleEdit: this.toggleEdit,
+      refs: { title: this.titleRef },
     };
   };
 
   detailProps = () => {
     return {
-      item: this.props.item ? this.props.item : null,
-      isUpdate: this.props.item ? true : false,
-      addHandler: this.addHandler,
-      updateHandler: this.updateHandler,
-      cancelHandler: this.props.cancelHandler,
+      item: this.props.item,
+      clickHandler: this.updateHandler,
+      cancelHandler: this.toggleEdit,
+      refs: {
+        date: this.dateRef,
+        time: this.timeRef,
+        comment: this.commentRef,
+      },
     };
   };
 
   render() {
     return (
       <Wrapper>
-        <TaskProvider value={this.elementRefs}>
-          <TaskHeader {...this.headerProps()} />
-          {this.state.edit && <TaskDetail {...this.detailProps()} />}
-        </TaskProvider>
+        <VisibleTaskHeader {...this.headerProps()} />
+        {this.state.edit && <TaskBody {...this.detailProps()} />}
       </Wrapper>
     );
   }

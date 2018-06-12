@@ -23,6 +23,7 @@ const updateItem = item => {
 };
 
 const setItems = items => {
+  console.log(items);
   localStorage.setItem(todoItemsKey, JSON.stringify(items));
 };
 
@@ -34,4 +35,5 @@ export default {
   addItem,
   updateItem,
   listItems,
+  setItems,
 };

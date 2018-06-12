@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { color, fontSize } from '../DesignConfig';
 import classNames from 'classnames';
 
 const Wrapper = styled.div`
-  height: ${props => (props.complete ? '4.75rem' : '6.38rem')};
+  height: 4.75rem;
   background-color: ${props => (props.important ? color.paleOrange : color.lightGray)};
   margin-bottom: 0.19rem;
 `;
@@ -17,31 +17,20 @@ const Header = styled.div`
   align-items: center;
 `;
 
-const TitleStyle = css`
+const StyledTextfield = styled.input`
   display: inline-block;
   user-select: none;
   margin-left: 1rem;
   font-size: ${fontSize.large};
   flex-grow: 1;
   text-align: left;
-  font-family: 'Robot';
-`;
-
-const StyledTextfield = styled.input`
+  font-family: 'Roboto';
   border: none;
   background: none;
   outline: none;
   &::placeholder {
     color: ${color.darkGray};
   }
-  ${TitleStyle};
-`;
-
-const StyledLabel = styled.label`
-  text-decoration: ${props => (props.checked ? 'line-through' : '')};
-  color: ${props => (props.checked ? color.darkGray : color.black)};
-  line-height: 35px;
-  ${TitleStyle};
 `;
 
 const StyledCheckmark = styled.label`
@@ -88,89 +77,37 @@ const StyledIcon = styled.i`
 
 const EditIcon = StyledIcon.extend`
   color: ${props => (props.edit ? color.blue : color.black)};
-  cursor: pointer;
 `;
 const ImportantIcon = StyledIcon.extend`
   cursor: pointer;
   color: ${props => (props.important ? color.orange : color.black)};
 `;
-const DeleteIcon = StyledIcon.extend`
-  cursor: pointer;
-  color: ${color.black};
-  &:hover {
-    color: ${color.red};
-  }
-`;
-
-const StatusIcon = StyledIcon.extend`
-  margin-right: 1rem;
-  color: ${props => (props.status ? color.darkGray : color.black)};
-`;
-
-const Status = styled.div`
-  margin-left: 4.5rem;
-  text-align: left;
-`;
 
 class TaskHeader extends Component {
-  state = { ...this.props.item };
-
-  changeHandler = e => {
-    this.setState({ title: e.target.value });
-  };
-
   render() {
-    const {
-      toggleEdit,
-      edit,
-      item,
-      toggleImportant,
-      toggleComplete,
-      deleteTodo,
-      complete,
-      important,
-      refs,
-    } = this.props;
-    const { title } = this.state;
-    const checkboxID = item ? item.id : 'complete-new';
+    const { refs, complete, important, toggleComplete, toggleImportant } = this.props;
     return (
-      <Wrapper important={important} complete={complete}>
+      <Wrapper important={important}>
         <Header>
           <StyledCheckbox
+            innerRef={refs.complete}
             type="checkbox"
             checked={complete}
             onChange={toggleComplete}
-            id={checkboxID}
+            id="complete-new"
           />
-          <StyledCheckmark htmlFor={checkboxID} />
-          {edit ? (
-            <StyledTextfield
-              placeholder={this.props.item ? '' : 'Type Something here...'}
-              innerRef={refs.title}
-              value={title}
-              type="text"
-              onChange={this.changeHandler}
-            />
-          ) : (
-            <StyledLabel checked={complete}>{title}</StyledLabel>
-          )}
+          <StyledCheckmark htmlFor="complete-new" />
+
+          <StyledTextfield placeholder="Type Something here..." innerRef={refs.title} type="text" />
 
           <ImportantIcon
             className={classNames('fa-star', important ? 'fas' : 'far')}
             important={important}
+            innerRef={refs.important}
             onClick={toggleImportant}
           />
-          <EditIcon className="fas fa-pencil-alt" edit={edit} onClick={toggleEdit} />
-          <DeleteIcon className="far fa-trash-alt" onClick={deleteTodo} />
+          <EditIcon className="fas fa-pencil-alt" edit={true} />
         </Header>
-
-        {!complete && (
-          <Status>
-            <StatusIcon className="far fa-calendar-alt" status />
-            <StatusIcon className="far fa-comment-dots" status />
-            <StatusIcon className="far fa-file" status />
-          </Status>
-        )}
       </Wrapper>
     );
   }

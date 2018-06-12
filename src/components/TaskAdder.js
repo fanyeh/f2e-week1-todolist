@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Task from './Task';
+import NewTask from '../containers/NewTask';
 import { color, fontSize, fontWeight } from './DesignConfig';
 
+const Wrapper = styled.div`
+  margin: 1.5rem auto;
+`;
+
 const AddButton = styled.button`
-  width: 38.75rem;
+  width: 100%;
   height: 4.06rem;
   background-color: ${color.white};
   font: ${fontWeight.light} ${fontSize.large} 'Roboto';
@@ -17,10 +21,6 @@ const AddButton = styled.button`
   color: ${color.gray};
 `;
 
-const Wrapper = styled.div`
-  margin: 1.5rem auto;
-`;
-
 class TaskAdder extends Component {
   state = { showNewTask: false };
   clickHandler = () => {
@@ -30,11 +30,7 @@ class TaskAdder extends Component {
     return (
       <Wrapper>
         {this.state.showNewTask ? (
-          <Task
-            edit={true}
-            cancelHandler={this.clickHandler}
-            refreshHandler={this.props.refreshHandler}
-          />
+          <NewTask cancelHandler={this.clickHandler} />
         ) : (
           <AddButton onClick={this.clickHandler}>+ Add Task</AddButton>
         )}

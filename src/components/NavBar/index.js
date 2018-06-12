@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import NavItem from './NavItem';
 import { fontSize, fontWeight } from '../DesignConfig';
+import FilterItem from '../../containers/FilterItem';
+import { VisibilityFilters } from '../../actions';
 
-const items = ['my tasks', 'in progress', 'completed'];
+const items = [
+  { type: VisibilityFilters.SHOW_ALL, name: 'my tasks' },
+  { type: VisibilityFilters.SHOW_ACTIVE, name: 'in progress' },
+  { type: VisibilityFilters.SHOW_COMPLETED, name: 'completed' },
+];
 
 const StyledNav = styled.nav`
   font-size: ${fontSize.large};
@@ -13,21 +18,13 @@ const StyledNav = styled.nav`
 `;
 
 class NavBar extends Component {
-  state = { selectedItem: items[0] };
-
-  clickHandler = item => {
-    this.setState({ selectedItem: item });
-  };
   render() {
     return (
       <StyledNav>
         {items.map(item => (
-          <NavItem
-            name={item}
-            key={item}
-            clickHandler={this.clickHandler}
-            isSelected={this.state.selectedItem === item}
-          />
+          <FilterItem key={item.type} filter={item.type}>
+            {item.name}
+          </FilterItem>
         ))}
       </StyledNav>
     );
