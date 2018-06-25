@@ -25,18 +25,7 @@ const CancelButton = Button.extend`
   background-color: ${color.white};
 `;
 
-const FileButton = Button.extend`
-  background-color: ${color.gray};
-  font-size: ${fontSize.large};
-  width: 2rem;
-  height: 2rem;
-  margin-top: 0.5rem;
-  margin-left: 1.5rem;
-  border-radius: 2px;
-`;
-
 Button.Add = AddButton;
 Button.Cancel = CancelButton;
-Button.File = FileButton;
 
 export default Button;

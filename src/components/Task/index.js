@@ -11,17 +11,19 @@ class TaskNew extends Component {
     this.state = {
       important: item ? item.important : false,
       complete: item ? item.complete : false,
-      date: item ? moment(item.date) : moment(),
+      date: item ? moment.unix(item.date) : moment(),
       title: item ? item.title : '',
       comment: item ? item.comment : '',
       time: item ? item.time : '',
-      edit: this.props.item ? false : true,
+      edit: item ? false : true,
+      isNew: item ? false : true,
     };
   }
 
   /**
    * Handlers
    */
+
   addHandler = () => {
     const { addTodo, cancelHandler } = this.props;
     addTodo(this.createItem());
@@ -35,15 +37,14 @@ class TaskNew extends Component {
     this.toggleEdit();
   };
 
+  deleteHandler = () => {
+    const { item, deleteTodo } = this.props;
+    deleteTodo();
+    this.toggleEdit();
+  };
+
   toggleEdit = () => {
-    this.setState(
-      ({ edit }) => ({ edit: !edit }),
-      () => {
-        if (this.state.edit) {
-          this.titleRef.current.focus();
-        }
-      },
-    );
+    this.setState(({ edit }) => ({ edit: !edit }));
   };
 
   setTitle = e => {
@@ -62,15 +63,13 @@ class TaskNew extends Component {
   };
 
   toggleImportant = () => {
-    this.props.item
-      ? this.props.item.toggleImportant()
-      : this.setState(({ important }) => ({ important: !important }));
+    this.props.item && this.props.toggleImportant();
+    this.setState(({ important }) => ({ important: !important }));
   };
 
   toggleComplete = () => {
-    this.props.item
-      ? this.props.item.toggleComplete()
-      : this.setState(({ complete }) => ({ complete: !complete }));
+    this.props.item && this.props.toggleComplete();
+    this.setState(({ complete }) => ({ complete: !complete }));
   };
 
   /**
@@ -78,7 +77,7 @@ class TaskNew extends Component {
    */
 
   createItem = () => {
-    const { date, ...states } = this.state;
+    const { date, edit, ...states } = this.state;
     return {
       ...states,
       id: Date.now(),
@@ -99,6 +98,7 @@ class TaskNew extends Component {
       toggleImportant: this.toggleImportant,
       setTitle: this.setTitle,
       toggleEdit: item ? this.toggleEdit : () => {},
+      deleteHandler: this.deleteHandler,
     };
   };
 

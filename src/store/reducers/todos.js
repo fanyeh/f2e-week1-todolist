@@ -1,6 +1,18 @@
-import DataCenter from '../../components/DataCenter';
+const todoItemsKey = 'f2e-todoItems';
 
-const todos = (state = DataCenter.listItems(), action) => {
+const getCurrentItems = () => {
+  return JSON.parse(localStorage.getItem(todoItemsKey)) || {};
+};
+
+const setItems = items => {
+  localStorage.setItem(todoItemsKey, JSON.stringify(items));
+};
+
+const listItems = () => {
+  return Object.values(getCurrentItems());
+};
+
+const todos = (state = listItems(), action) => {
   let newTodos = [];
   switch (action.type) {
     case 'ADD_TODO':
@@ -27,7 +39,7 @@ const todos = (state = DataCenter.listItems(), action) => {
     default:
       return state;
   }
-  DataCenter.setItems(newTodos);
+  setItems(newTodos);
   return newTodos;
 };
 export default todos;

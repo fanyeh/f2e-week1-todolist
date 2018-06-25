@@ -17,12 +17,14 @@ class TaskHeader extends Component {
     const {
       complete,
       important,
+      deleteHandler,
       toggleComplete,
       toggleImportant,
       setTitle,
       title,
       toggleEdit,
       edit,
+      isNew,
     } = this.props;
     return (
       <Wrapper important={important}>
@@ -35,6 +37,7 @@ class TaskHeader extends Component {
             value={title}
             innerRef={this.titleRef}
             strike={complete}
+            disabled={!edit}
           />
           <Icon.important
             className={classNames('fa-star', important ? 'fas' : 'far')}
@@ -42,6 +45,7 @@ class TaskHeader extends Component {
             onClick={toggleImportant}
           />
           <Icon.edit className="fas fa-pencil-alt" edit={edit} onClick={toggleEdit} />
+          {!isNew && <Icon.delete className="fas fa-trash-alt" onClick={deleteHandler} />}
         </Title>
       </Wrapper>
     );

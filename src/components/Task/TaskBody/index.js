@@ -6,6 +6,7 @@ import Button from './Button';
 import TextArea from './TextArea';
 import TextField from './TextField';
 import Flex from './Flex';
+import FileLabel from './FileLabel';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -19,7 +20,7 @@ class TaskBody extends Component {
     this.setState({ fileName: e.target.value });
   };
   render() {
-    const { handlers, date, time, comment } = this.props;
+    const { handlers, date, time, comment, isNew } = this.props;
     const { clickHandler, cancelHandler, dateHandler, timeHandler, commentHandler } = handlers;
     return (
       <Wrapper>
@@ -32,7 +33,7 @@ class TaskBody extends Component {
 
         <ItemContainer name="file" icon="fa-file">
           <label>{this.state.fileName.split(/.*[\/|\\]/)[1]}</label>
-          <Button.File htmlFor="file1">+</Button.File>
+          <FileLabel htmlFor="file1">+</FileLabel>
           <FileInput
             type="file"
             id="file1"
@@ -51,10 +52,10 @@ class TaskBody extends Component {
 
         <Flex>
           <Button.Cancel onClick={cancelHandler}>
-            <span>x</span> Cancel
+            <span>Cancel</span>
           </Button.Cancel>
           <Button.Add onClick={clickHandler}>
-            <span>+</span> Add Task
+            <span>{isNew ? 'Add' : 'Update'}</span>
           </Button.Add>
         </Flex>
       </Wrapper>

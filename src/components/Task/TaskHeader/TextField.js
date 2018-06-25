@@ -11,6 +11,7 @@ const TextField = styled.input`
   border: none;
   background: none;
   outline: none;
+  user-select: none;
   text-decoration: ${({ strike }) => (strike ? 'line-through' : '')};
   &::placeholder {
     color: ${color.darkGray};
