@@ -1,8 +1,11 @@
 import { connect } from 'react-redux';
-import { updateTodo } from '../actions';
 import Task from '../components/Task';
+import { toggleComplete, toggleImportant, deleteTodo, updateTodo } from '../store/actions';
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  toggleComplete: () => dispatch(toggleComplete(ownProps.item.id)),
+  toggleImportant: () => dispatch(toggleImportant(ownProps.item.id)),
+  deleteTodo: () => dispatch(deleteTodo(ownProps.item.id)),
   updateTodo: item => dispatch(updateTodo(item)),
 });
 

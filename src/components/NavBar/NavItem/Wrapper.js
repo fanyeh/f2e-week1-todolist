@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
 import styled from 'styled-components';
-import { color } from '../DesignConfig';
+import { color } from '../../DesignConfig';
 
-const Wrapper = styled.div`
+export default styled.div`
   position: relative;
   width: 13.75rem;
   line-height: 1.75rem;
@@ -21,16 +20,3 @@ const Wrapper = styled.div`
     opacity: ${props => (props.selected ? 1 : 0)};
   }
 `;
-
-class NavItem extends Component {
-  render() {
-    const { onClick, selected, children } = this.props;
-    return (
-      <Wrapper selected={selected} onClick={onClick}>
-        {children}
-      </Wrapper>
-    );
-  }
-}
-
-export default NavItem;

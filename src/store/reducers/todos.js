@@ -1,4 +1,4 @@
-import DataCenter from '../components/DataCenter';
+import DataCenter from '../../components/DataCenter';
 
 const todos = (state = DataCenter.listItems(), action) => {
   let newTodos = [];

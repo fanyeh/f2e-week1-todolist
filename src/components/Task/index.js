@@ -1,29 +1,37 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import TaskBody from './TaskBody';
-import VisibleTaskHeader from '../../containers/VisibleTaskHeader';
+import TaskHeader from './TaskHeader';
+import moment from 'moment';
 
-const Wrapper = styled.div`
-  margin-bottom: 0.5rem;
-`;
+class TaskNew extends Component {
+  constructor(props) {
+    super(props);
 
-class Task extends Component {
-  state = {
-    edit: this.props.item ? false : true,
-  };
-
-  titleRef = React.createRef();
-  dateRef = React.createRef();
-  timeRef = React.createRef();
-  commentRef = React.createRef();
+    const { item } = props;
+    this.state = {
+      important: item ? item.important : false,
+      complete: item ? item.complete : false,
+      date: item ? moment(item.date) : moment(),
+      title: item ? item.title : '',
+      comment: item ? item.comment : '',
+      time: item ? item.time : '',
+      edit: this.props.item ? false : true,
+    };
+  }
 
   /**
    * Handlers
    */
+  addHandler = () => {
+    const { addTodo, cancelHandler } = this.props;
+    addTodo(this.createItem());
+    cancelHandler();
+  };
 
   updateHandler = () => {
-    const updatedItem = Object.assign(this.props.item, this.createItem());
-    this.props.updateTodo(updatedItem);
+    const { item, updateTodo } = this.props;
+    const updatedItem = Object.assign(item, this.createItem());
+    updateTodo(updatedItem);
     this.toggleEdit();
   };
 
@@ -38,31 +46,44 @@ class Task extends Component {
     );
   };
 
-  /**
-   * Lifecycles
-   */
+  setTitle = e => {
+    this.setState({ title: e.target.value });
+  };
 
-  componentDidMount() {
-    if (this.state.edit) {
-      this.titleRef.current.focus();
-    }
-  }
+  setDate = date => {
+    this.setState({ date: date });
+  };
+  setTime = e => {
+    this.setState({ time: e.target.value });
+  };
+
+  setComment = e => {
+    this.setState({ comment: e.target.value });
+  };
+
+  toggleImportant = () => {
+    this.props.item
+      ? this.props.item.toggleImportant()
+      : this.setState(({ important }) => ({ important: !important }));
+  };
+
+  toggleComplete = () => {
+    this.props.item
+      ? this.props.item.toggleComplete()
+      : this.setState(({ complete }) => ({ complete: !complete }));
+  };
 
   /**
    * Utils
    */
 
   createItem = () => {
+    const { date, ...states } = this.state;
     return {
-      title: this.getRefValue(this.titleRef),
-      date: this.getRefValue(this.dateRef),
-      time: this.getRefValue(this.timeRef),
-      comment: this.getRefValue(this.commentRef),
+      ...states,
+      id: Date.now(),
+      date: date.unix(),
     };
-  };
-
-  getRefValue = ref => {
-    return ref.current.value;
   };
 
   /**
@@ -70,35 +91,40 @@ class Task extends Component {
    */
 
   headerProps = () => {
+    const { date, comment, time, ...states } = this.state;
+    const { item } = this.props;
     return {
-      ...this.state,
-      item: this.props.item,
-      toggleEdit: this.toggleEdit,
-      refs: { title: this.titleRef },
+      ...states,
+      toggleComplete: this.toggleComplete,
+      toggleImportant: this.toggleImportant,
+      setTitle: this.setTitle,
+      toggleEdit: item ? this.toggleEdit : () => {},
     };
   };
 
-  detailProps = () => {
+  bodyProps = () => {
+    const { important, complete, title, ...states } = this.state;
+    const { item, cancelHandler } = this.props;
     return {
-      item: this.props.item,
-      clickHandler: this.updateHandler,
-      cancelHandler: this.toggleEdit,
-      refs: {
-        date: this.dateRef,
-        time: this.timeRef,
-        comment: this.commentRef,
+      ...states,
+      handlers: {
+        clickHandler: item ? this.updateHandler : this.addHandler,
+        cancelHandler: item ? this.toggleEdit : cancelHandler,
+        dateHandler: this.setDate,
+        timeHandler: this.setTime,
+        commentHandler: this.setComment,
       },
     };
   };
 
   render() {
     return (
-      <Wrapper>
-        <VisibleTaskHeader {...this.headerProps()} />
-        {this.state.edit && <TaskBody {...this.detailProps()} />}
-      </Wrapper>
+      <div>
+        <TaskHeader {...this.headerProps()} />
+        {this.state.edit && <TaskBody {...this.bodyProps()} />}
+      </div>
     );
   }
 }
 
-export default Task;
+export default TaskNew;

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { addTodo } from '../actions';
-import TaskNew from '../components/TaskNew';
+import { addTodo } from '../store/actions';
+import TaskNew from '../components/Task';
 
 const mapDispatchToProps = dispatch => ({
   addTodo: item => dispatch(addTodo(item)),
