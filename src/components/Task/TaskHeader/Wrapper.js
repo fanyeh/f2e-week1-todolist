@@ -4,4 +4,5 @@ export default styled.div`
   background-color: ${props => (props.important ? color.paleOrange : color.lightGray)};
   margin-bottom: 0.19rem;
   margin-top: 1.5rem;
+  padding-bottom: 1.5rem;
 `;

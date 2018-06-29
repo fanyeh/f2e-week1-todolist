@@ -5,7 +5,7 @@ import Title from './Title';
 import Icon from './Icon';
 import Checkbox from './Checkbox';
 import Wrapper from './Wrapper';
-
+import Status from './Status';
 class TaskHeader extends Component {
   titleRef = React.createRef();
 
@@ -25,6 +25,8 @@ class TaskHeader extends Component {
       toggleEdit,
       edit,
       isNew,
+      hasComment,
+      date,
     } = this.props;
     return (
       <Wrapper important={important}>
@@ -47,6 +49,7 @@ class TaskHeader extends Component {
           <Icon.edit className="fas fa-pencil-alt" edit={edit} onClick={toggleEdit} />
           {!isNew && <Icon.delete className="fas fa-trash-alt" onClick={deleteHandler} />}
         </Title>
+        <Status hasComment={hasComment} date={date} complete={complete} />
       </Wrapper>
     );
   }

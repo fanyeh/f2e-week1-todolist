@@ -26,21 +26,21 @@ class TaskBody extends Component {
       <Wrapper>
         <ItemContainer name="deadline" icon="fa-calendar-alt">
           <Flex>
-            <DatePicker selected={date} onChange={dateHandler} />
+            <DatePicker selected={date} onChange={dateHandler} placeholderText="MM/DD/YYYY" />
             <TextField type="text" placeholder="hh:mm" value={time} onChange={timeHandler} />
           </Flex>
         </ItemContainer>
 
-        <ItemContainer name="file" icon="fa-file">
-          <label>{this.state.fileName.split(/.*[\/|\\]/)[1]}</label>
+        {/* <ItemContainer name="file" icon="fa-file">
           <FileLabel htmlFor="file1">+</FileLabel>
+          <label>{this.state.fileName.split(/.*[\/|\\]/)[1]}</label>
           <FileInput
             type="file"
             id="file1"
             value={this.state.fileName}
             onChange={this.changeHandler}
           />
-        </ItemContainer>
+        </ItemContainer> */}
 
         <ItemContainer name="comment" icon="fa-comment-dots">
           <TextArea

@@ -13,4 +13,5 @@ export default styled.label`
   margin-top: 0.5rem;
   margin-left: 1.5rem;
   border-radius: 2px;
+  cursor: pointer;
 `;

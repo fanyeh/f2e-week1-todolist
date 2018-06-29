@@ -6,6 +6,9 @@ const Icon = styled.i`
   cursor: pointer;
   margin-right: 2rem;
   color: ${color.black};
+  & > span {
+    padding-left: 0.5rem;
+  }
 `;
 
 const Edit = Icon.extend`

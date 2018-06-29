@@ -11,7 +11,7 @@ class TaskNew extends Component {
     this.state = {
       important: item ? item.important : false,
       complete: item ? item.complete : false,
-      date: item ? moment.unix(item.date) : moment(),
+      date: item ? moment.unix(item.date) : null,
       title: item ? item.title : '',
       comment: item ? item.comment : '',
       time: item ? item.time : '',
@@ -99,6 +99,8 @@ class TaskNew extends Component {
       setTitle: this.setTitle,
       toggleEdit: item ? this.toggleEdit : () => {},
       deleteHandler: this.deleteHandler,
+      hasComment: item ? item.comment.length > 0 : false,
+      date,
     };
   };
 

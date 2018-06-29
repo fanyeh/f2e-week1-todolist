@@ -45,3 +45,7 @@
 .react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle {
   margin-top: -6px;
 }
+
+.react-datepicker__input-container > input::placeholder {
+  color: #c8c8c8;
+}
